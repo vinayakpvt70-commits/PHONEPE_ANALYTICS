@@ -1,0 +1,92 @@
+// All payment attempts in the current filter context.
+Transactions = COUNTROWS(Transactions)
+
+// Sum of all attempted payment amounts, including unsuccessful. INR is assumed from the supplied artwork.
+Attempted Value = SUM(Transactions[Amount])
+
+// 
+Successful Transactions = CALCULATE([Transactions],KEEPFILTERS(Transactions[Outcome]="Successful"))
+
+// 
+Unsuccessful Transactions = CALCULATE([Transactions],KEEPFILTERS(Transactions[Outcome]="Unsuccessful"))
+
+// Amount marked successful in source; not revenue or verified settlement.
+Successful Value = CALCULATE([Attempted Value],KEEPFILTERS(Transactions[Outcome]="Successful"))
+
+// Unsuccessful attempted value, without evidence of loss or recovery.
+Unsuccessful Value = CALCULATE([Attempted Value],KEEPFILTERS(Transactions[Outcome]="Unsuccessful"))
+
+// 
+Attempted Value Cr = DIVIDE([Attempted Value],10000000)
+
+// 
+Successful Value Cr = DIVIDE([Successful Value],10000000)
+
+// 
+Unsuccessful Value Cr = DIVIDE([Unsuccessful Value],10000000)
+
+// 
+Attempted Value Display = VAR V=[Attempted Value] RETURN SWITCH(TRUE(),ISBLANK(V),BLANK(),ABS(V)>=1000000000,FORMAT(V/1000000000,"₹0.00")&"bn",ABS(V)>=1000000,FORMAT(V/1000000,"₹0.00")&"M",ABS(V)>=1000,FORMAT(V/1000,"₹0.00")&"K",FORMAT(V,"₹0.00"))
+
+// Rate within selected outcomes. Choose all outcomes for overall reliability.
+Success Rate = DIVIDE([Successful Transactions],[Transactions])
+
+// 
+Unsuccessful Rate = DIVIDE([Unsuccessful Transactions],[Transactions])
+
+// 
+Average Successful Ticket = DIVIDE([Successful Value],[Successful Transactions])
+
+// Distinct users with an attempt in the selected context.
+Active Users = DISTINCTCOUNT(Transactions[User ID])
+
+// User table profiles; not an acquisition metric at transaction date.
+User Records = COUNTROWS(Users)
+
+// 
+Attempts per Active User = DIVIDE([Transactions],[Active Users])
+
+// 
+Repeat Users = COUNTROWS(FILTER(VALUES(Transactions[User ID]),CALCULATE([Transactions])>=2))
+
+// 
+Repeat User Share = DIVIDE([Repeat Users],[Active Users])
+
+// 
+Multi Service Users = COUNTROWS(FILTER(VALUES(Transactions[User ID]),CALCULATE(DISTINCTCOUNT(Transactions[Service]))>=2))
+
+// Calendar dates inside source coverage and selected calendar context.
+Calendar Days = COUNTROWS('Calendar')
+
+// 
+Attempts per Day = DIVIDE([Transactions],[Calendar Days])
+
+// 
+Pre Join Transactions = CALCULATE([Transactions],KEEPFILTERS(Transactions[Join Date Check]="Before join date"))
+
+// 
+Pre Join Share = DIVIDE([Pre Join Transactions],[Transactions])
+
+// 
+Raw Status Issues = CALCULATE([Transactions],KEEPFILTERS(Transactions[Raw Status Issue]=TRUE()))
+
+// 
+Unclassified Outcomes = COALESCE(CALCULATE([Transactions],KEEPFILTERS(Transactions[Outcome]="Unclassified")),0)
+
+// 
+Unmatched Transactions = COALESCE(CALCULATE([Transactions],KEEPFILTERS(Transactions[Join Date Check]="Unmatched user")),0)
+
+// 
+Duplicate Transaction IDs = [Transactions]-DISTINCTCOUNT(Transactions[Transaction ID])
+
+// 
+Prior Month Transactions = CALCULATE([Transactions],DATEADD('Calendar'[Date],-1,MONTH))
+
+// Only for one selected month. Partial months are not normalized for this measure.
+Transactions MoM = IF(HASONEVALUE('Calendar'[Month]),DIVIDE([Transactions]-[Prior Month Transactions],[Prior Month Transactions]))
+
+// 
+Service Value Share = DIVIDE([Successful Value],CALCULATE([Successful Value],ALLSELECTED(Transactions[Service])))
+
+// Top five distinct user IDs, avoiding aggregation of different people with the same name.
+Top 5 User Value = VAR TopUsers=TOPN(5,ALLSELECTED(Transactions[User ID]),[Attempted Value],DESC,Transactions[User ID],ASC) RETURN IF(CONTAINS(TopUsers,Transactions[User ID],SELECTEDVALUE(Transactions[User ID])),[Attempted Value])

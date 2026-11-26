@@ -1,0 +1,6 @@
+Reason,attempts,successful,unsuccessful,attempted_cents,successful_cents,unsuccessful_cents,success_rate,active_users,pre_join,status_issues
+Bank Denied,635,0,635,3222211111,0,3222211111,0.0,634,336,635
+Insufficient amount,3304,0,3304,1289339145,0,1289339145,0.0,3255,1787,0
+Server error,4053,0,4053,4774685025,0,4774685025,0.0,3980,2177,692
+Wrong Info,700,0,700,3520166059,0,3520166059,0.0,696,381,700
+Wrong PIN,3315,0,3315,1323182962,0,1323182962,0.0,3274,1805,0

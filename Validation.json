@@ -1,0 +1,19 @@
+{
+  "revision": "Independent CSV import after reported embedded-query refresh failure",
+  "previous_error": "Users: 0x80040E4E; Transactions and Calendar: COM/mscorlib unable to determine the identity of domain. Exact root cause unconfirmed.",
+  "schema_documents_checked": 95,
+  "schema_or_field_errors": [],
+  "source_rows_preserved": true,
+  "csv_users": 107658,
+  "csv_transactions": 300000,
+  "csv_calendar_dates": 365,
+  "source_fields_compared_row_by_row": true,
+  "integer_cent_totals_reconciled": true,
+  "derived_outcomes_and_join_flags_reconciled": true,
+  "background_image_structure_and_resource_checked": true,
+  "source_workbook_preserved": true,
+  "no_embedded_compressed_data_queries": true,
+  "query_dependencies": "Each table reads its own CSV; only DataFolder is shared.",
+  "native_execution": "Power BI Desktop is unavailable. The revised project refresh, DAX execution and native rendering have NOT been tested. Resolution of the reported domain error is NOT confirmed.",
+  "preview": "Dashboard_Preview is a design render using source figures, not a Power BI screenshot."
+}

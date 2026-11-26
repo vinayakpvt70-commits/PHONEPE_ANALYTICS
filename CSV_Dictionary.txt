@@ -1,0 +1,21 @@
+CSV AND JSON FIELD GUIDE
+
+All summaries cover the supplied 2024-01-01 to 2024-12-30 snapshot.
+attempts: all payment records in the group.
+successful / unsuccessful: record counts after status normalization.
+attempted_cents / successful_cents / unsuccessful_cents: integer hundredths
+of the assumed INR unit. Divide by 100 for INR, or 1,000,000,000 for INR crore.
+success_rate: decimal proportion, e.g. 0.96 = 96%.
+active_users: distinct User_ID values with an attempt in the group.
+pre_join: attempts before the profile's Join_Date.
+status_issues: raw status is neither Successful nor Failed.
+days: number of covered calendar dates in the month or weekday grouping.
+attempts_per_day: attempts / covered calendar dates.
+services (top_users.csv): distinct services used by that user.
+AgeBand: profile age groups 18–24, 25–34, 35–44, 45–54 and 55+.
+
+User counts cannot be added across overlapping months, services or weekdays.
+The first row of each CSV gives the grouping and metric column names.
+Top users are sorted by attempted value, not name and not successful value.
+Original source service values retain underscores in CSV files; the report
+displays spaces instead. No source records were deleted due to quality flags.
